@@ -21,6 +21,12 @@ class Register extends Component {
 
         const { username, email, password, confirmPassword } = this.state;
 
+        if (username === undefined || email === undefined || password === undefined || confirmPassword === undefined) {
+            alert("All fields should be filled")
+        } else if (password !== confirmPassword) {
+            alert("password and confirm password should be the same")
+        }
+
         try {
             const response = await fetch('http://localhost:8081/api/auth/signup', {
                 method: 'POST',
@@ -35,8 +41,12 @@ class Register extends Component {
                 }),
             });
 
+            if (response.status === 409) {
+                alert(`Username "${username}" is already taken`)
+            } else if (response.status === 200) {
+                alert("You were successfully registered!")
+            }
             console.log(response);
-
 
         } catch (error) {
             console.error('Error:', error);
